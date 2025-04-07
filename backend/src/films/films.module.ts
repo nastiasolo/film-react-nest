@@ -15,5 +15,6 @@ import { Schedule, ScheduleSchema } from './schemas/schedule.schema';
   ],
   controllers: [FilmsController],
   providers: [FilmsService, FilmsRepository],
+  exports: [MongooseModule],
 })
 export class FilmsModule {}

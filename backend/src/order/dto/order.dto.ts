@@ -1,14 +1,11 @@
-//TODO реализовать DTO для /orders
-import { IsString, IsArray, IsNumber } from 'class-validator';
+export class OrderDTO {
+  tickets: {
+    film: string;
+    session: string;
+    row: number;
+    seat: number;
+  }[];
 
-export class CreateOrderDto {
-  @IsString()
-  userId: string;
-
-  @IsArray()
-  @IsString({ each: true })
-  tickets: string[];
-
-  @IsNumber()
-  totalPrice: number;
+  email: string;
+  phone: string;
 }

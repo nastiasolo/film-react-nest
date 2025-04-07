@@ -1,4 +1,3 @@
-//TODO описать DTO для запросов к /films
 import { IsString, IsArray, IsNumber, IsOptional } from 'class-validator';
 import { Film } from '../schemas/films.schema';
 

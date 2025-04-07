@@ -8,7 +8,7 @@ export class FilmsController {
   @Get()
   async getAll() {
     const films = await this.filmsService.getAll();
-    return { items: films }; // 🔥 Теперь API возвращает объект с `items`
+    return { items: films };
   }
 
   @Get(':id/schedule')
@@ -18,6 +18,6 @@ export class FilmsController {
       throw new NotFoundException('Фильм не найден');
     }
 
-    return { items: film.schedule ?? [] }; // формат для фронта
+    return { items: film.schedule ?? [] };
   }
 }

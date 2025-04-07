@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Film } from './schemas/films.schema';
 import { FilmsRepository } from '../repository/films.repository';
 
@@ -16,8 +16,8 @@ export class FilmsService {
       tags: film.tags,
       title: film.title,
       description: film.description || film.about || '',
-      image: `${film.image}`, // относительный путь для фронтенда
-      cover: `${film.cover}`, // относительный путь для фронтенда
+      image: `${film.image}`,
+      cover: `${film.cover}`,
     }));
   }
 
