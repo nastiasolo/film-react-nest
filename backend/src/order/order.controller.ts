@@ -1,7 +1,6 @@
 import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { OrderDTO } from './dto/order.dto';
-import dayjs from 'dayjs';
 
 @Controller('order')
 export class OrderController {
