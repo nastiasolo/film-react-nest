@@ -1,16 +1,16 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Types } from 'mongoose';
 
 @Schema()
 export class Schedule {
-  @Prop({ type: Types.ObjectId, ref: 'Film', required: true }) // Связь с фильмом
+  @Prop({ type: Types.ObjectId, ref: 'Film', required: true })
   filmId: Types.ObjectId;
 
   @Prop({ required: true })
-  id: string; // Уникальный идентификатор расписания
+  id: string;
 
   @Prop({ required: true })
-  daytime: string; // Время сеанса
+  daytime: string;
 
   @Prop({ required: true })
   hall: number;
@@ -24,7 +24,7 @@ export class Schedule {
   @Prop({ required: true })
   price: number;
 
-  @Prop({ type: [String], default: [] }) // Массив занятых мест
+  @Prop({ type: [String], default: [] })
   taken: string[];
 }
 

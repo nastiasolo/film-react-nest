@@ -4,6 +4,7 @@ export class OrderDTO {
     session: string;
     row: number;
     seat: number;
+    price: number;
   }[];
 
   email: string;

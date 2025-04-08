@@ -41,6 +41,7 @@ export class OrderService {
         row,
         seat,
         daytime: schedule.daytime,
+        price: schedule.price,
       });
 
       await this.filmModel.updateOne(
