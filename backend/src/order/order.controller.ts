@@ -10,21 +10,11 @@ export class OrderController {
   @Post()
   @HttpCode(200)
   async orderTickets(@Body() dto: OrderDTO) {
-    const rawTickets = await this.orderService.orderTickets(dto);
-
-    // превращаем каждый билет в ScheduleSession
-    const sessions = rawTickets.map((ticket) => {
-      const date = dayjs(ticket.daytime);
-      return {
-        id: ticket.session,
-        day: date.format('D MMMM'),
-        time: date.format('HH:mm'),
-      };
-    });
+    const items = await this.orderService.orderTickets(dto);
 
     return {
-      total: sessions.length,
-      items: sessions,
+      total: items.length,
+      items,
     };
   }
 }

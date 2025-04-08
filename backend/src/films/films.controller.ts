@@ -8,7 +8,10 @@ export class FilmsController {
   @Get()
   async getAll() {
     const films = await this.filmsService.getAll();
-    return { items: films };
+    return {
+      total: films.length,
+      items: films,
+    };
   }
 
   @Get(':id/schedule')
@@ -18,6 +21,10 @@ export class FilmsController {
       throw new NotFoundException('Фильм не найден');
     }
 
-    return { items: film.schedule ?? [] };
+    const schedule = film.schedule ?? [];
+    return {
+      total: schedule.length,
+      items: schedule,
+    };
   }
 }

@@ -8,7 +8,7 @@ export class FilmsService {
 
   async getAll(): Promise<Film[]> {
     const films = await this.filmsRepository.findAll();
-    console.log(films, 'films');
+
     return films.map((film) => ({
       id: film.id,
       rating: film.rating,
