@@ -8,6 +8,7 @@ export class FilmsController {
   @Get()
   async getAll() {
     const films = await this.filmsService.getAll();
+
     return {
       total: films.length,
       items: films,

@@ -1,28 +1,41 @@
 import { Injectable } from '@nestjs/common';
-import { Film } from './schemas/films.schema';
-import { FilmsRepository } from '../repository/films.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Film } from '../entities/film.entity';
+
+import { FilmDTO } from './dto/films.dto';
 
 @Injectable()
 export class FilmsService {
-  constructor(private readonly filmsRepository: FilmsRepository) {}
+  constructor(
+    @InjectRepository(Film)
+    private readonly filmsRepository: Repository<Film>,
+  ) {}
 
-  async getAll(): Promise<Film[]> {
-    const films = await this.filmsRepository.findAll();
+  async getAll(): Promise<
+    {
+      id: string;
+      rating: number;
+      director: string;
+      tags: string;
+      title: string;
+      description: string;
+      image: string;
+      cover: string;
+    }[]
+  > {
+    const films = await this.filmsRepository.find({
+      relations: ['schedule'],
+    });
 
-    return films.map((film) => ({
-      id: film.id,
-      rating: film.rating,
-      director: film.director,
-      tags: film.tags,
-      title: film.title,
-      description: film.description || film.about || '',
-      image: `${film.image}`,
-      cover: `${film.cover}`,
-    }));
+    return films.map((film) => new FilmDTO(film));
   }
 
   async findById(id: string): Promise<Film | null> {
-    return this.filmsRepository.findById(id);
+    return this.filmsRepository.findOne({
+      where: { id },
+      relations: ['schedule'],
+    });
   }
 
   async getScheduleByFilmId(id: string) {

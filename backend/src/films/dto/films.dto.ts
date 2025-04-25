@@ -1,27 +1,27 @@
 import { IsString, IsArray, IsNumber, IsOptional } from 'class-validator';
-import { Film } from '../schemas/films.schema';
+import { Film } from '../../entities/film.entity';
 
 export class ScheduleDTO {
   @IsString()
-  id: string; // Идентификатор сеанса
+  id: string;
 
   @IsString()
-  daytime: string; // Время сеанса
+  daytime: string;
 
   @IsNumber()
-  hall: number; // Номер зала
+  hall: number;
 
   @IsNumber()
-  rows: number; // Количество рядов в зале
+  rows: number;
 
   @IsNumber()
-  seats: number; // Количество мест в ряду
+  seats: number;
 
   @IsNumber()
-  price: number; // Цена билета
+  price: number;
 
   @IsArray()
-  taken: string[]; // Список забронированных мест (может быть массивом строк)
+  taken: string[];
 }
 
 export class FilmDTO {
@@ -34,8 +34,8 @@ export class FilmDTO {
   @IsString()
   director: string;
 
-  @IsArray()
-  tags: string[];
+  @IsString()
+  tags: string;
 
   @IsString()
   image: string;
@@ -56,7 +56,6 @@ export class FilmDTO {
   @IsOptional()
   schedule?: ScheduleDTO[];
 
-  // Конструктор для инициализации из Film
   constructor(film: Film) {
     this.id = film.id;
     this.rating = film.rating;
@@ -67,6 +66,17 @@ export class FilmDTO {
     this.title = film.title;
     this.about = film.about;
     this.description = film.description;
-    this.schedule = film.schedule; // если schedule есть
+    if (film.schedule) {
+      this.schedule = film.schedule.map((s) => ({
+        id: s.id,
+        daytime:
+          s.daytime instanceof Date ? s.daytime.toISOString() : s.daytime,
+        hall: s.hall,
+        rows: s.rows,
+        seats: s.seats,
+        price: s.price,
+        taken: s.taken || [],
+      }));
+    }
   }
 }

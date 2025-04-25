@@ -1,13 +1,14 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Film } from '../entities/film.entity';
 import { OrderDTO } from './dto/order.dto';
-import { Film, FilmDocument } from '../films/schemas/films.schema';
 
 @Injectable()
 export class OrderService {
   constructor(
-    @InjectModel(Film.name) private readonly filmModel: Model<FilmDocument>,
+    @InjectRepository(Film)
+    private readonly filmRepository: Repository<Film>,
   ) {}
 
   async orderTickets(dto: OrderDTO) {
@@ -15,7 +16,10 @@ export class OrderService {
 
     for (const ticket of dto.tickets) {
       const { film, session, row, seat } = ticket;
-      const filmDoc = await this.filmModel.findOne({ id: film });
+      const filmDoc = await this.filmRepository.findOne({
+        where: { id: film },
+        relations: ['schedule'],
+      });
 
       if (!filmDoc) {
         throw new BadRequestException(`Фильм с id ${film} не найден`);
@@ -44,11 +48,9 @@ export class OrderService {
         price: schedule.price,
       });
 
-      await this.filmModel.updateOne(
-        { id: film },
-        { $set: { schedule: filmDoc.schedule } },
-      );
+      await this.filmRepository.save(filmDoc);
     }
+
     return result;
   }
 }
