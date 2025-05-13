@@ -3,7 +3,7 @@ name: Build and Publish Docker Images
 on:
   push:
     branches:
-      - main # или другая ветка, с которой ты работаешь
+      - review-2 # или другая ветка, с которой ты работаешь
 
 permissions:
   contents: read

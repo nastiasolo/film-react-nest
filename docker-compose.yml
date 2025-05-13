@@ -1,8 +1,12 @@
-version: "3.8"
-
 services:
   frontend:
-    image: ghcr.io/nastiasolo/frontend:latest
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: /api/afisha
+        VITE_CDN_URL: /content/afisha
+      dockerfile: Dockerfile
+    image: ghcr.io/nastiasolo/frontend
     env_file:
       - ./frontend/.env
     volumes:
@@ -11,9 +15,12 @@ services:
       - backend
 
   backend:
-    image: ghcr.io/nastiasolo/backend:latest
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "3001:3000"
+    image: ghcr.io/nastiasolo/backend
     env_file:
       - ./backend/.env
     depends_on:
@@ -51,7 +58,10 @@ services:
       - postgres
 
   nginx:
-    image: ghcr.io/nastiasolo/nginx:latest
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: ghcr.io/nastiasolo/nginx
     ports:
       - "80:80"
     volumes:
