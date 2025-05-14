@@ -3,7 +3,7 @@ name: Build and Publish Docker Images
 on:
   push:
     branches:
-      - review-2 # или другая ветка, с которой ты работаешь
+      - review-2
 
 permissions:
   contents: read
@@ -32,6 +32,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
+          file: ./frontend/Dockerfile
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/frontend:latest
           build-args: |
@@ -43,6 +44,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./backend
+          file: ./backend/Dockerfile
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/backend:latest
 
@@ -51,5 +53,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./nginx
+          file: ./nginx/Dockerfile
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/nginx:latest
