@@ -20,4 +20,4 @@ COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
 
-CMD ["postgres:5432", "--", "yarn", "start:prod"]
+CMD ["yarn", "start:prod"]
