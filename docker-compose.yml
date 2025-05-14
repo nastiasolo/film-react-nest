@@ -6,6 +6,8 @@ services:
         VITE_API_URL: /api/afisha
         VITE_CDN_URL: /content/afisha
       dockerfile: Dockerfile
+    ports:
+      - "3000:80"
     image: ghcr.io/nastiasolo/frontend
     env_file:
       - ./frontend/.env
