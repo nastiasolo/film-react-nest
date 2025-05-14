@@ -18,7 +18,7 @@ WORKDIR /app
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY wait-for.sh /wait-for.sh
-RUN chmod +x wait-for.sh
+RUN chmod +x /wait-for.sh
 
 EXPOSE 3000
 
