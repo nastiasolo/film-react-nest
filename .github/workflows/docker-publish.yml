@@ -1,0 +1,59 @@
+name: Build and Publish Docker Images
+
+on:
+  push:
+    branches:
+      - review-2
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # FRONTEND
+      - name: Build and Push Frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: true
+          no-cache: true
+          tags: ghcr.io/${{ github.repository_owner }}/frontend:latest
+          build-args: |
+            VITE_API_URL=/api/afisha
+            VITE_CDN_URL=/content/afisha
+
+      # BACKEND
+      - name: Build and Push Backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/backend:latest
+
+      # NGINX
+      - name: Build and Push Nginx
+        uses: docker/build-push-action@v5
+        with:
+          context: ./nginx
+          file: ./nginx/Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/nginx:latest

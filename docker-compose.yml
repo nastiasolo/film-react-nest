@@ -1,0 +1,89 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: /api/afisha
+        VITE_CDN_URL: /content/afisha
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    image: ghcr.io/nastiasolo/frontend
+    env_file:
+      - ./frontend/.env
+    volumes:
+      - frontend_build:/app/dist
+    depends_on:
+      - backend
+    restart: always
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    image: ghcr.io/nastiasolo/backend
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/public/content/afisha:/app/public/content/afisha:ro
+    depends_on:
+      - postgres
+    restart: always
+
+  postgres:
+    image: postgres:13-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: prac
+      POSTGRES_PASSWORD: prac
+      POSTGRES_DB: prac
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "prac"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+    restart: always
+
+  pgadmin:
+    image: dpage/pgadmin4:6.0
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: ghcr.io/nastiasolo/nginx
+    ports:
+      - "80:80"
+    volumes:
+      - frontend_build:/usr/share/nginx/html:ro
+    depends_on:
+      - frontend
+      - backend
+    restart: always
+
+networks:
+  default:
+    name: app_net
+
+volumes:
+  frontend_build:
+  postgres_data:
+  pgadmin_data:
