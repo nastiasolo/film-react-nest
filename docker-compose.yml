@@ -26,6 +26,8 @@ services:
     image: ghcr.io/nastiasolo/backend
     env_file:
       - ./backend/.env
+    volumes:
+      - ./content/afisha:/app/public/content/afisha:ro
     depends_on:
       - postgres
     restart: always
