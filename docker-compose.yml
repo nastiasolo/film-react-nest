@@ -27,7 +27,7 @@ services:
     env_file:
       - ./backend/.env
     volumes:
-      - ./content/afisha:/app/public/content/afisha:ro
+      - ./backend/public/content/afisha:/app/public/content/afisha:ro
     depends_on:
       - postgres
     restart: always
